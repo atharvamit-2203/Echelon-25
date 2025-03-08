@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CRM Customer Engagement</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #e9ecef;
+            margin: 0;
+        }
+
+        .login-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        input, select, button {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        input:focus, select:focus {
+            border-color: #80bdff;
+            outline: none;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <label for="userId">User ID:</label>
+            <input type="text" id="userId" name="userId" required>
+            
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            
+            <label for="role">Role:</label>
+            <select id="role" name="role" required>
+                <option value="">Select Role</option>
+                <option value="CEO">CEO</option>
+                <option value="COO">COO</option>
+                <option value="CFO">CFO</option>
+                <option value="CTO">CTO</option>
+                <option value="CIO">CIO</option>
+                <option value="CMO">CMO</option>
+                <option value="CHRO">CHRO</option>
+                <option value="General Manager">General Manager</option>
+                <option value="Marketing Manager">Marketing Manager</option>
+                <option value="Sales Manager">Sales Manager</option>
+                <option value="HR Manager">HR Manager</option>
+                <option value="Finance Manager">Finance Manager</option>
+                <option value="Operations Manager">Operations Manager</option>
+                <option value="Project Manager">Project Manager</option>
+                <option value="Product Manager">Product Manager</option>
+            </select>
+            
+            <button type="submit">Login</button>
+            <p id="error-message" class="error-message"></p>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            let userId = document.getElementById('userId').value;
+            let password = document.getElementById('password').value;
+            let role = document.getElementById('role').value;
+            let errorMessage = document.getElementById('error-message');
+            
+            const companyEmailRegex = /^[a-zA-Z0-9._%+-]+@(?!gmail\.com|yahoo\.com)[a-zA-Z0-9.-]+\.com$/;
+            
+            if (!companyEmailRegex.test(userId)) {
+                errorMessage.textContent = "Enter a valid company email/User ID only";
+                return;
+            }
+            
+            if (password.length < 6) {
+                errorMessage.textContent = "Password must be at least 6 characters long";
+                return;
+            }
+            
+            if (!role) {
+                errorMessage.textContent = "Please select a role";
+                return;
+            }
+            
+            errorMessage.textContent = "";
+            alert("Login successful (This is a placeholder. Implement backend authentication)");
+        });
+    </script>
+</body>
+</html>
