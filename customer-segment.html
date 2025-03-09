@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Insights & Segmentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .back-btn {
+            background-color: white;
+            color: #007bff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .upload-section {
+            padding: 20px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .upload-section h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .upload-section p {
+            margin-bottom: 15px;
+            color: #666;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-label {
+            display: inline-block;
+            padding: 12px 20px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .file-label:hover {
+            background-color: #0056b3;
+        }
+
+        .file-name {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            padding: 12px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 15px;
+        }
+
+        .upload-btn:hover {
+            background-color: #218838;
+        }
+
+        .upload-btn:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .results-section {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .results-section h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .insights-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .insights-box h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .insights-box p {
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .insights-box ul {
+            padding-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        .insights-box li {
+            margin-bottom: 5px;
+        }
+
+        .segment-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .stat-card .count {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .stat-card .percentage {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .loyal {
+            border-top: 4px solid #28a745;
+        }
+
+        .at-risk {
+            border-top: 4px solid #dc3545;
+        }
+
+        .potential {
+            border-top: 4px solid #ffc107;
+        }
+
+        .saturated {
+            border-top: 4px solid #6f42c1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background-color: #f1f1f1;
+            font-weight: bold;
+            color: #333;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .segment-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .loyal-badge {
+            background-color: #28a745;
+        }
+
+        .at-risk-badge {
+            background-color: #dc3545;
+        }
+
+        .potential-badge {
+            background-color: #ffc107;
+            color: #333;
+        }
+
+        .saturated-badge {
+            background-color: #6f42c1;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            padding: 8px 12px;
+            margin: 0 5px;
+            border: 1px solid #007bff;
+            background-color: white;
+            color: #007bff;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .pagination button.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .loader {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .loader-spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #007bff;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            color: #dc3545;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        #sampleCSVLink {
+            color: #007bff;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Customer Insights & Segmentation</h1>
+            <button class="back-btn" onclick="window.location.href='index.html'">Back to Dashboard</button>
+        </div>
+        
+        <div class="content">
+            <div class="error-message" id="errorMessage"></div>
+
+            <div class="upload-section">
+                <h2>Upload Customer Data</h2>
+                <p>Upload a CSV file containing customer data. The file must include the following columns: <strong>CustomerID, MonthlyCharges, Churn, Tenure, TotalCharges</strong></p>
+                <p>Don't have a file? Download our <a id="sampleCSVLink">sample CSV template</a>.</p>
+                
+                <input type="file" id="csvFile" class="file-input" accept=".csv">
+                <label for="csvFile" class="file-label">Select CSV File</label>
+                <div class="file-name" id="fileName">No file selected</div>
+                
+                <button class="upload-btn" id="uploadBtn" disabled>Upload and Analyze</button>
+            </div>
+
+            <div class="loader" id="loader">
+                <div class="loader-spinner"></div>
+                <p>Analyzing customer data...</p>
+            </div>
+
+            <div class="results-section" id="resultsSection">
+                <h2>Segmentation Results</h2>
+                
+                <div class="segment-stats" id="segmentStats">
+                    <!-- Segment statistics will be added here dynamically -->
+                </div>
+                
+                <div class="insights-box">
+                    <h3>Insights</h3>
+                    <div id="insightsList">
+                        <!-- Insights will be added here dynamically -->
+                    </div>
+                </div>
+
+                <h3>Customer Segmentation Details</h3>
+                <div style="overflow-x: auto;">
+                    <table id="customersTable">
+                        <thead>
+                            <tr>
+                                <th>Customer ID</th>
+                                <th>Segment</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customersTableBody">
+                            <!-- Table rows will be added here dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pagination" id="pagination">
+                    <!-- Pagination buttons will be added here dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM elements
+        const csvFileInput = document.getElementById('csvFile');
+        const fileNameDisplay = document.getElementById('fileName');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const loader = document.getElementById('loader');
+        const resultsSection = document.getElementById('resultsSection');
+        const segmentStats = document.getElementById('segmentStats');
+        const insightsList = document.getElementById('insightsList');
+        const customersTableBody = document.getElementById('customersTableBody');
+        const pagination = document.getElementById('pagination');
+        const errorMessage = document.getElementById('errorMessage');
+        const sampleCSVLink = document.getElementById('sampleCSVLink');
+
+        // Global variables
+        let customerData = [];
+        const itemsPerPage = 10;
+        let currentPage = 1;
+
+        // Sample CSV data
+        const sampleCSVContent = `CustomerID,MonthlyCharges,Churn,Tenure,TotalCharges
+1001,79.85,0,36,2875.3
+1002,108.45,1,12,1293.2
+1003,45.25,0,48,2173.8
+1004,119.5,1,7,836.5
+1005,39.75,0,60,2384.6
+1006,89.95,0,24,2154.6
+1007,55.5,0,8,445.5
+1008,104.8,1,18,1884.6
+1009,49.95,0,40,1998.0
+1010,95.45,1,5,477.25`;
+
+        // Generate and download the sample CSV file
+        sampleCSVLink.addEventListener('click', function() {
+            const blob = new Blob([sampleCSVContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden', '');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'sample_customer_data.csv');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
+
+        // Handle file selection
+        csvFileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                fileNameDisplay.textContent = file.name;
+                uploadBtn.disabled = false;
+            } else {
+                fileNameDisplay.textContent = 'No file selected';
+                uploadBtn.disabled = true;
+            }
+        });
+
+        // Handle file upload
+        uploadBtn.addEventListener('click', function() {
+            const file = csvFileInput.files[0];
+            if (!file) return;
+
+            // Show loader and hide any previous error
+            loader.style.display = 'block';
+            errorMessage.style.display = 'none';
+            resultsSection.style.display = 'none';
+
+            // Create form data
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Send the file to the backend
+            fetch('http://localhost:5000/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.error || 'Failed to process the file.');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Hide loader
+                loader.style.display = 'none';
+                
+                // Process and display the results
+                processResults(data);
+                
+                // Show results section
+                resultsSection.style.display = 'block';
+            })
+            .catch(error => {
+                // Hide loader
+                loader.style.display = 'none';
+                
+                // Show error message
+                errorMessage.textContent = error.message;
+                errorMessage.style.display = 'block';
+            });
+        });
+
+        // Process and display the results
+        function processResults(data) {
+            // Store the customer data
+            customerData = data.customer_segments;
+            
+            // Display segment statistics
+            displaySegmentStats();
+            
+            // Display insights
+            displayInsights(data.insights);
+            
+            // Display customer table (first page)
+            displayCustomerTable();
+            
+            // Setup pagination
+            setupPagination();
+        }
+
+        // Display segment statistics
+        function displaySegmentStats() {
+            // Count segments
+            const segments = {
+                'Loyal': 0,
+                'At Risk': 0,
+                'Potential': 0,
+                'Saturated': 0
+            };
+            
+            customerData.forEach(customer => {
+                if (segments.hasOwnProperty(customer.Segment)) {
+                    segments[customer.Segment]++;
+                }
+            });
+            
+            // Calculate total and percentages
+            const total = customerData.length;
+            
+            // Clear previous stats
+            segmentStats.innerHTML = '';
+            
+            // Add stat cards
+            Object.keys(segments).forEach(segment => {
+                const count = segments[segment];
+                const percentage = ((count / total) * 100).toFixed(1);
+                
+                const className = segment.toLowerCase().replace(' ', '-');
+                
+                const statCard = document.createElement('div');
+                statCard.className = `stat-card ${className}`;
+                statCard.innerHTML = `
+                    <h3>${segment} Customers</h3>
+                    <div class="count">${count}</div>
+                    <div class="percentage">${percentage}% of total</div>
+                `;
+                
+                segmentStats.appendChild(statCard);
+            });
+        }
+
+        // Display insights
+        function displayInsights(insights) {
+            // Format insights as a list
+            const formattedInsights = insights
+                .split('\n')
+                .filter(line => line.trim() !== '')
+                .map(line => `<li>${line.trim()}</li>`)
+                .join('');
+            
+            insightsList.innerHTML = `<ul>${formattedInsights}</ul>`;
+        }
+
+        // Display customer table with pagination
+        function displayCustomerTable() {
+            // Clear table
+            customersTableBody.innerHTML = '';
+            
+            // Calculate start and end indices for current page
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, customerData.length);
+            
+            // Add table rows
+            for (let i = startIndex; i < endIndex; i++) {
+                const customer = customerData[i];
+                
+                const row = document.createElement('tr');
+                
+                // Determine segment badge class
+                let badgeClass = '';
+                switch (customer.Segment) {
+                    case 'Loyal':
+                        badgeClass = 'loyal-badge';
+                        break;
+                    case 'At Risk':
+                        badgeClass = 'at-risk-badge';
+                        break;
+                    case 'Potential':
+                        badgeClass = 'potential-badge';
+                        break;
+                    case 'Saturated':
+                        badgeClass = 'saturated-badge';
+                        break;
+                }
+                
+                row.innerHTML = `
+                    <td>${customer.CustomerID}</td>
+                    <td><span class="segment-badge ${badgeClass}">${customer.Segment}</span></td>
+                `;
+                
+                customersTableBody.appendChild(row);
+            }
+        }
+
+        // Setup pagination
+        function setupPagination() {
+            // Clear pagination
+            pagination.innerHTML = '';
+            
+            // Calculate total pages
+            const totalPages = Math.ceil(customerData.length / itemsPerPage);
+            
+            // Add previous button
+            if (totalPages > 1) {
+                const prevButton = document.createElement('button');
+                prevButton.textContent = 'Previous';
+                prevButton.disabled = currentPage === 1;
+                prevButton.addEventListener('click', () => {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        displayCustomerTable();
+                        setupPagination();
+                    }
+                });
+                pagination.appendChild(prevButton);
+            }
+            
+            // Add page buttons (limited to 5 visible pages)
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            // Adjust if we're near the end
+            if (endPage - startPage + 1 < maxVisiblePages && startPage > 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.textContent = i;
+                pageButton.className = i === currentPage ? 'active' : '';
+                pageButton.addEventListener('click', () => {
+                    currentPage = i;
+                    displayCustomerTable();
+                    setupPagination();
+                });
+                pagination.appendChild(pageButton);
+            }
+            
+            // Add next button
+            if (totalPages > 1) {
+                const nextButton = document.createElement('button');
+                nextButton.textContent = 'Next';
+                nextButton.disabled = currentPage === totalPages;
+                nextButton.addEventListener('click', () => {
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        displayCustomerTable();
+                        setupPagination();
+                    }
+                });
+                pagination.appendChild(nextButton);
+            }
+        }
+    </script>
+</body>
+</html>
