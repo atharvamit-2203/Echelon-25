@@ -173,33 +173,18 @@
         <div class="sidebar">
             <h2>CRM Dashboard</h2>
             <ul>
-                <li onclick="toggleSection('insights')">Customer Insights & Segmentation</li>
-                <li onclick="toggleSection('engagement')">Engagement Analysis</li>
-                <li onclick="toggleSection('performance')">Performance</li>
-                <li onclick="toggleSection('personalized')">Personalized Engagement</li>
-                <li onclick="toggleSection('feedback')">Feedback</li>
+                <li onclick="navigateTo('customer-insights.html')">Customer Insights & Segmentation</li>
+                <li onclick="navigateTo('engagement-analysis.html')">Engagement Analysis</li>
+                <li onclick="navigateTo('performance.html')">Performance</li>
+                <li onclick="navigateTo('personalized-engagement.html')">Personalized Engagement</li>
+                <li onclick="navigateTo('resource_optimization.html')">Resource Optimization</li>
             </ul>
         </div>
         <div class="content">
-            <div id="insights" class="section">
-                <h1>Customer Insights & Segmentation</h1>
-                <p>Analyze customer data and group them based on behavior, preferences, and interactions.</p>
-            </div>
-            <div id="engagement" class="section">
-                <h1>Engagement Analysis</h1>
-                <p>Track and measure customer engagement across various touchpoints.</p>
-            </div>
-            <div id="performance" class="section">
-                <h1>Performance</h1>
-                <p>Evaluate the success of engagement strategies and identify key performance metrics.</p>
-            </div>
-            <div id="personalized" class="section">
-                <h1>Personalized Engagement</h1>
-                <p>Enhance customer experience through tailored interactions and recommendations.</p>
-            </div>
-            <div id="feedback" class="section">
-                <h1>Feedback</h1>
-                <p>Collect and analyze customer feedback to improve service quality.</p>
+            <div id="dashboard-home" class="section" style="display: block;">
+                <h1>CRM Dashboard Home</h1>
+                <p>Welcome to your CRM Dashboard. Select an option from the sidebar to navigate to specific modules.</p>
+                <p>Each module provides detailed analytics and tools to enhance your customer relationship management.</p>
             </div>
         </div>
     </div>
@@ -211,13 +196,19 @@
         }
 
         function validateLogin() {
+            // Here you would normally validate the login credentials with a backend
+            // For now, we'll just navigate to the dashboard
             document.getElementById("login-container").style.display = "none";
             document.getElementById("dashboard").style.display = "flex";
         }
-
-        function toggleSection(sectionId) {
-            let section = document.getElementById(sectionId);
-            section.style.display = (section.style.display === "block") ? "none" : "block";
+        
+        function navigateTo(page) {
+            // Store any necessary session data in localStorage if needed
+            // For example:
+            // localStorage.setItem('userRole', document.getElementById('role').value);
+            
+            // Navigate to the specified page
+            window.location.href = page;
         }
     </script>
 
