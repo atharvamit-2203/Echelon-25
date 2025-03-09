@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Engagement Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #007bff;
+        }
+
+        .container {
+            background: #222;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+            width: 50%;
+            margin: 20px auto;
+        }
+
+        input[type="file"] {
+            margin: 15px 0;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            color: white;
+        }
+
+        .btn-upload { background-color: #28a745; }
+        .btn-bar { background-color: #007bff; }
+        .btn-heatmap { background-color: #ff5733; }
+        .btn-result { background-color: #ffc107; }
+
+        .btn:hover { opacity: 0.8; }
+
+        img {
+            max-width: 80%;
+            margin-top: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+        }
+
+        #result-table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid white;
+            padding: 10px;
+        }
+
+        th {
+            background-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Customer Engagement Dashboard</h1>
+
+    <div class="container">
+        <h2>Upload CSV File</h2>
+        <input type="file" id="fileInput">
+        <button class="btn btn-upload" onclick="uploadFile()">Upload & Process</button>
+    </div>
+
+    <div class="container">
+        <h2>Visualizations</h2>
+        <button class="btn btn-bar" onclick="showBarGraph()">📊 Show Bar Graph</button>
+        <button class="btn btn-heatmap" onclick="showHeatmap()">🔥 Show Heatmap</button>
+        <button class="btn btn-result" onclick="showResults()">📄 Show Results</button>
+    </div>
+
+    <div id="output"></div>
+
+    <script>
+        function uploadFile() {
+            let fileInput = document.getElementById("fileInput").files[0];
+            if (!fileInput) {
+                alert("Please select a CSV file to upload.");
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append("file", fileInput);
+
+            fetch("/upload", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert("File uploaded and processed successfully!");
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        function showBarGraph() {
+            document.getElementById("output").innerHTML = `<img src="/bar_graph.png" alt="Bar Graph">`;
+        }
+
+        function showHeatmap() {
+            document.getElementById("output").innerHTML = `<img src="/heatmap.png" alt="Heatmap">`;
+        }
+
+        function showResults() {
+            fetch("/results")
+            .then(response => response.json())
+            .then(data => {
+                let table = `<table id="result-table">
+                                <tr>
+                                    <th>Tenure</th>
+                                    <th>Churn</th>
+                                    <th>Engagement Level</th>
+                                </tr>`;
+                data.forEach(row => {
+                    table += `<tr>
+                                <td>${row.tenure}</td>
+                                <td>${row.Churn}</td>
+                                <td>${row.Engagement_Level}</td>
+                              </tr>`;
+                });
+                table += "</table>";
+                document.getElementById("output").innerHTML = table;
+            });
+        }
+    </script>
+
+</body>
+</html>
